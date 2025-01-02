@@ -166,9 +166,10 @@ class IrActionsReport(models.Model):
         if not printer:
             raise exceptions.UserError(_("No printer configured to print this report."))
         if self.print_report_name:
+            model = (data or {}).get("active_model", self.model)
             report_file_names = [
                 safe_eval(self.print_report_name, {"object": obj, "time": time})
-                for obj in self.env[self.model].browse(record_ids)
+                for obj in self.env[model].browse(record_ids)
             ]
             title = " ".join(report_file_names)
             if len(title) > 80:
